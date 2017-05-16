@@ -8,8 +8,6 @@ import java.util.List;
  * Created by BhavinPadhiyar on 27/04/16.
  */
 abstract public class DataProvider extends MonitorList {
-    protected int curruntRefreshPage=0;
-    protected int curruntPage=0;
     protected boolean isFetching = false;
     protected boolean isFetchingRefresh = false;
     protected boolean canLoadNext = true;
@@ -22,14 +20,6 @@ abstract public class DataProvider extends MonitorList {
     protected boolean isFirstCall = true;
     protected boolean isConfigurableObject = false;
     private List<WeakReference<OnFatchingObserve>> onFatchingObserveList = new ArrayList<>();
-
-    public int getCurruntRefreshPage() {
-        return curruntRefreshPage;
-    }
-
-    public int getCurruntPage() {
-        return curruntPage;
-    }
 
     abstract protected void invokeLoadNext();
 
@@ -60,8 +50,6 @@ abstract public class DataProvider extends MonitorList {
     }
 
     public void garbageCollectorCall() {
-        curruntPage=0;
-        curruntRefreshPage=0;
         if(onFatchingObserveList!=null) {
             for (int i = 0; i < onFatchingObserveList.size(); i++) {
                 onFatchingObserveList.set(i, null);
@@ -142,8 +130,6 @@ abstract public class DataProvider extends MonitorList {
     }
 
     public void reset() {
-        curruntPage=0;
-        curruntRefreshPage=0;
         resetData();
         removeAll(this);
         isFirstCall=true;
@@ -250,11 +236,6 @@ abstract public class DataProvider extends MonitorList {
 
     public void addData(List list) {
         onFetchingFinish(isFetchingRefresh);
-
-        if(isFetchingRefresh)
-            curruntRefreshPage +=1;
-        else
-            curruntPage +=1;
 
         if(getConfigurableObject())
         {
