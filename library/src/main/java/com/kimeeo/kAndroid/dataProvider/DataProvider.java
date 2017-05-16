@@ -14,6 +14,7 @@ abstract public class DataProvider extends MonitorList {
     protected boolean canLoadRefresh = true;
     protected boolean refreshEnabled = false;
     protected boolean nextEnabled = false;
+    protected boolean pagingEnabled = false;
     protected int refreshItemPos = 0;
     protected boolean enterReverse = false;
     protected int nextItemPos = 0;
@@ -97,13 +98,30 @@ abstract public class DataProvider extends MonitorList {
     public void setConfigurableObject(boolean configurableObject) {
         isConfigurableObject = configurableObject;
     }
+
+    /*
+        @deprecated use {@link #getPagingEnabled()} instead.
+     */
+    @Deprecated
     public boolean getNextEnabled() {
         return nextEnabled;
     }
-
+    /*
+        @deprecated use {@link #setPagingEnabled()} instead.
+     */
+    @Deprecated
     public void setNextEnabled(boolean nextEnabled) {
         this.nextEnabled = nextEnabled;
     }
+
+    public boolean getPagingEnabled() {
+        return pagingEnabled;
+    }
+
+    public void setPagingEnabled(boolean pagingEnabled) {
+        this.pagingEnabled = pagingEnabled;
+    }
+
 
     public boolean getRefreshEnabled() {
         return refreshEnabled;
@@ -130,11 +148,15 @@ abstract public class DataProvider extends MonitorList {
     }
 
     public void reset() {
+        reset(true);
+    }
+    public void reset(boolean callNext) {
         resetData();
         removeAll(this);
         isFirstCall=true;
         setCanLoadNext(true);
-        next();
+        if(callNext)
+            next();
     }
 
     protected void resetData() {
@@ -150,6 +172,13 @@ abstract public class DataProvider extends MonitorList {
             return true;
         }
         else if(isFetching==false && getCanLoadNext() && getNextEnabled()) {
+            isFetching=true;
+            isFetchingRefresh=false;
+            onFetchingStart(isFetchingRefresh);
+            invokeLoadNext();
+            return true;
+        }
+        else if(isFetching==false && getCanLoadNext() && getPagingEnabled()) {
             isFetching=true;
             isFetchingRefresh=false;
             onFetchingStart(isFetchingRefresh);
