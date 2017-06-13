@@ -36,7 +36,7 @@ dependencies {
     //This is a core library for any Kimeeo Project
     //This is a core library has a basic fragment, permisions, activity, application bootstap code.
     //https://github.com/kimeeo/KAndroid_core
-    final KANDROID_CORE_VERSION = 'V3.1.0Beta'
+    final KANDROID_CORE_VERSION = 'Ant-V1.0.0'
     compile ("com.github.kimeeo:KAndroid_core:$KANDROID_CORE_VERSION@aar"){
         transitive=true
     }
